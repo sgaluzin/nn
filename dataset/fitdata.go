@@ -13,7 +13,7 @@ import (
 //var err error
 
 func main() {
-	file, err := os.Open("car_data.csv")
+	file, err := os.Open("car_data_orig.csv")
 	if err != nil {
 		panic(err)
 	}
@@ -76,7 +76,28 @@ func fitCols(df dataframe.DataFrame) dataframe.DataFrame {
 
 	column2 := column.Capply(changeF2)
 
-	return column2
+	changeF3 := func(s series.Series) series.Series {
+		if s.Name != "UserId" {
+			return s
+		}
+
+		records := s.Records()
+		newRecords := make([]float64, len(records))
+		for i, v := range records {
+			f, err := strconv.ParseFloat(v, 64)
+			if err != nil {
+				panic(err)
+			}
+
+			newRecords[i] = f / 1000.0
+		}
+
+		return series.Floats(newRecords)
+	}
+
+	column3 := column2.Capply(changeF3)
+
+	return column3
 }
 
 func fitSalary(df dataframe.DataFrame) dataframe.DataFrame {
