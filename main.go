@@ -219,7 +219,7 @@ func getInputDataFromFile() (*matrix, *matrix) {
 
 	df := dataframe.ReadCSV(f)
 
-	inputDf := df.Drop("UserId").Drop("Purchased")
+	inputDf := df.Drop("Purchased")
 
 	bias := make([]float64, inputDf.Nrow())
 	for i := 0; i < inputDf.Nrow(); i++ {
